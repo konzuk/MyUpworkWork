@@ -1,0 +1,25 @@
+C:\Users\konzuk\Google Drive\JobUpwork5V2\bin\Debug\JobUpwork5.exe.config
+C:\Users\konzuk\Google Drive\JobUpwork5V2\bin\Debug\JobUpwork5.exe
+C:\Users\konzuk\Google Drive\JobUpwork5V2\bin\Debug\JobUpwork5.pdb
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.AddEditForm.resources
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.myFlowPanel.resources
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.myButton.resources
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.Properties.Resources.resources
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5V2.csproj.GenerateResource.Cache
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.exe
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.pdb
+C:\Users\konzuk\Google Drive\JobUpwork5V2\obj\Debug\JobUpwork5.MC.resources
+D:\UpworkWork\Elad\JobUpwork5V2\bin\Debug\ESW3#Macro.exe.config
+D:\UpworkWork\Elad\JobUpwork5V2\bin\Debug\ESW3#Macro.exe
+D:\UpworkWork\Elad\JobUpwork5V2\bin\Debug\ESW3#Macro.pdb
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.MC.resources
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.AddEditForm.resources
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.myFlowPanel.resources
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.myButton.resources
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.Properties.Resources.resources
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\JobUpwork5V2.csproj.GenerateResource.Cache
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.exe
+D:\UpworkWork\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.pdb
+D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\bin\Debug\ESW3#Macro.exe.config
+D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.exe
+D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.pdb
