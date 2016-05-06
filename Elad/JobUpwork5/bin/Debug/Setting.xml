@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<DocumentElement>
+  <FormSetting>
+    <IsFormTopMost>1</IsFormTopMost>
+    <IsFormFixed>1</IsFormFixed>
+    <IPAddress>127.0.0.1</IPAddress>
+    <Port>1893</Port>
+    <ButtonSize>50,28</ButtonSize>
+    <ButtonCount>4</ButtonCount>
+    <DesiredLocation>310,177</DesiredLocation>
+    <FileName>FDMSW2Bands.xml</FileName>
+  </FormSetting>
+</DocumentElement>
