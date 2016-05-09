@@ -103,7 +103,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\FDMSW2Bands2.xml" />
+    <Content Include="bin\Debug\FDMSW2Bands.xml" />
     <Content Include="bin\Debug\Setting.xml" />
     <Content Include="fdm.ico" />
   </ItemGroup>
