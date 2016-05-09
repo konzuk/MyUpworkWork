@@ -105,6 +105,11 @@ namespace JobUpwork5
                     e.CellStyle.BackColor = model.Rgb;
                 }
             }
+            if (this.dataGridView1.Columns[e.ColumnIndex] == this.Tune || this.dataGridView1.Columns[e.ColumnIndex] == this.Start || this.dataGridView1.Columns[e.ColumnIndex] == this.Stop)
+            {
+                double value = e.Value as double? ?? 0;
+                e.Value = $"{value:#,##0.000}";
+            }
         }
 
         private void AddEditForm_Load(object sender, EventArgs e)
@@ -186,9 +191,17 @@ namespace JobUpwork5
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-           
-            var model = new RadioAmBandTable();
-            model.Rgb = System.Drawing.Color.Black;
+            RadioAmBandTable model = null;
+            if (SelectedRadioAmBandTable != null)
+            {
+                model = SelectedRadioAmBandTable.Clone();
+            }
+            else
+            {
+                model = new RadioAmBandTable();
+                model.Rgb = System.Drawing.Color.Black;
+            }
+          
             dataGridView1.EndEdit();
             dataGridView1.DataSource = null;
             AllRadioAmBandTables.Add(model);
@@ -322,6 +335,13 @@ namespace JobUpwork5
                 fdmsw2BandsXml = new Data(mainForm.FileName);
                 dataGridView1.DataSource = null;
                 AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
+                foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+                {
+                    allRadioAmBandTable.IsKHZ = checkBoxKHZ.Checked;
+                    dataGridView1.ClearSelection();
+                    dataGridView1.Refresh();
+                }
+
                 BindGrid(AllRadioAmBandTables);
 
             }
