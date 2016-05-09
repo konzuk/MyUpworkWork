@@ -14,6 +14,7 @@ namespace JobUpwork5
         private Data Fdmsw2BandsXml;
         private Setting Setting;
         public bool IsFormFixed { get; set; }
+        public bool IsKHZ { get; set; }
         public string ButtonSize { get; set; }
         public int ButtonCount { get; set; }
         public string FileName { get; set; }
@@ -35,6 +36,7 @@ namespace JobUpwork5
             edit.ShowDialog(this);
             if (edit.isSave)
             {
+                Fdmsw2BandsXml = new Data(FileName);
                 Fdmsw2BandsXml.UpdateRadioAmBandTable(edit.AllRadioAmBandTables);
                 SaveSetting();
                 GetSetting();
@@ -81,6 +83,8 @@ namespace JobUpwork5
         }
         public void AddRABTButtons()
         {
+
+            
             this.flowLayoutPanel1.Controls.Clear();
             this.flowLayoutPanel2.Controls.Clear();
             

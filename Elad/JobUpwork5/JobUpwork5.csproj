@@ -103,8 +103,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\FDMSW2Bands2.xml" />
     <Content Include="bin\Debug\Setting.xml" />
-    <Content Include="bin\Debug\FDMSW2Bands.xml" />
     <Content Include="fdm.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

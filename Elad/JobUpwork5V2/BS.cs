@@ -9,24 +9,26 @@ using ClientServerApp;
 
 namespace JobUpwork5
 {
-    public partial class MC : Form
+    public partial class BS : Form
     {
-        private MyFDMSW2BandsXML Fdmsw2BandsXml;
+        private Data Fdmsw2BandsXml;
+        private Setting Setting;
         public bool IsFormFixed { get; set; }
+        public bool IsKHZ { get; set; }
         public string ButtonSize { get; set; }
         public int ButtonCount { get; set; }
-        public MC()
+        public string FileName { get; set; }
+        public BS()
         {
             InitializeComponent();
-            Fdmsw2BandsXml = new MyFDMSW2BandsXML();
-            //this.AddButtons();
+            Setting = new Setting();
+            this.GetSetting();
+            Fdmsw2BandsXml = new Data(FileName);
             this.AddRABTButtons();
             this.Load += MainForm_Load;
             this.LocationChanged += MainForm_LocationChanged;
         }
-
-
-
+        
         private void MyButtonSetting_Click(object sender, EventArgs e)
         {
             var edit = new AddEditForm();
@@ -34,6 +36,7 @@ namespace JobUpwork5
             edit.ShowDialog(this);
             if (edit.isSave)
             {
+                Fdmsw2BandsXml = new Data(FileName);
                 Fdmsw2BandsXml.UpdateRadioAmBandTable(edit.AllRadioAmBandTables);
                 SaveSetting();
                 GetSetting();
@@ -46,17 +49,18 @@ namespace JobUpwork5
             }
         }
 
-        private Point _desiredLocation;
+        public string DesiredLocation;
 
         private void MainForm_LocationChanged(object sender, EventArgs e)
         {
-            if (_desiredLocation == new Point(0, 0))
+            if (IsFormFixed)
             {
-                _desiredLocation = this.Location;
+                var locat = Array.ConvertAll(DesiredLocation.Split(','), Int32.Parse);
+                this.Location = new Point(locat[0],locat[1]);
             }
-            if (IsFormFixed && this.Location != _desiredLocation)
+            else
             {
-                this.Location = _desiredLocation;
+                DesiredLocation = $"{this.Location.X},{this.Location.Y}";
             }
         }
 
@@ -67,43 +71,25 @@ namespace JobUpwork5
         }
         public void GetSetting()
         {
-            Fdmsw2BandsXml.GetFormSetting(this);
+            Setting.GetFormSetting(this);
 
             this.Text = $"BAND-SW IP: {IPAddress}";
 
         }
         public void SaveSetting()
         {
-            Fdmsw2BandsXml.SaveFormSetting(this);
+            Setting.SaveFormSetting(this);
 
         }
         public void AddRABTButtons()
         {
 
-
-
-            this.GetSetting();
+            
             this.flowLayoutPanel1.Controls.Clear();
             this.flowLayoutPanel2.Controls.Clear();
-
-
-
+            
             var size = Array.ConvertAll(ButtonSize.Split(','), Int32.Parse);
-
-            this.flowLayoutPanel1.MinimumSize = new Size(ButtonCount * (size[0] + 10), 0);
-            this.flowLayoutPanel1.MaximumSize = new Size(ButtonCount * (size[0] + 10), 0);
-            this.flowLayoutPanel1.Size = new Size(ButtonCount * (size[0] + 10), this.Size.Width);
-
-            foreach (var allRadioAmBandTable in Fdmsw2BandsXml.GetAllRadioAmBandTables())
-            {
-                var btn = new myButton();
-                btn.SetRadioAmBandTable(allRadioAmBandTable);
-                btn.MinimumSize = new Size(size[0], size[1]);
-                btn.MaximumSize = new Size(size[0], size[1]);
-                btn.Click += Btn_Click;
-                this.flowLayoutPanel1.Controls.Add(btn);
-            }
-
+            
             var set = new myButton();
 
             set.MinimumSize = new Size(size[0], size[1]);
@@ -120,8 +106,29 @@ namespace JobUpwork5
             close.Text = "QUIT";
             this.flowLayoutPanel2.Controls.Add(close);
 
-        }
+            flowLayoutPanel2.MinimumSize = new Size((2 * (size[0] + 6)) + 10, 0);
+            flowLayoutPanel2.MaximumSize = new Size((2 * (size[0] + 6)) + 10, 0);
+            this.flowLayoutPanel1.Size = new Size((2 * (size[0] + 6)) + 10, this.Size.Width);
 
+
+            this.flowLayoutPanel1.MinimumSize = new Size((ButtonCount * (size[0] + 6)) + 10, 0);
+            this.flowLayoutPanel1.MaximumSize = new Size((ButtonCount * (size[0] + 6)) + 10, 0);
+            this.flowLayoutPanel1.Size = new Size((ButtonCount * (size[0] + 6)) + 10, this.Size.Width);
+
+
+            foreach (var allRadioAmBandTable in Fdmsw2BandsXml.GetAllRadioAmBandTables())
+            {
+                var btn = new myButton();
+                btn.SetRadioAmBandTable(allRadioAmBandTable);
+                btn.MinimumSize = new Size(size[0], size[1]);
+                btn.MaximumSize = new Size(size[0], size[1]);
+                btn.Click += Btn_Click;
+                this.flowLayoutPanel1.Controls.Add(btn);
+            }
+
+           
+
+        }
 
         private void Btn_Click(object sender, EventArgs e)
         {
@@ -173,8 +180,6 @@ namespace JobUpwork5
             }
 
         }
-
-
         public string IPAddress { get; set; }
         public string Port { get; set; }
 
@@ -237,4 +242,3 @@ namespace JobUpwork5
         //}
     }
 }
-

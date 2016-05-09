@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -12,16 +13,33 @@ namespace JobUpwork5
 {
     public partial class AddEditForm : Form
     {
-        private MyFDMSW2BandsXML fdmsw2BandsXml { get; set; }
-        public MC mainForm { get; set; }
+        private Data fdmsw2BandsXml { get; set; }
+        public BS mainForm { get; set; }
+        private string _appLocation;
+
+        private bool dataChanged;
+
         public AddEditForm()
         {
             InitializeComponent();
             this.Load += AddEditForm_Load;
-            fdmsw2BandsXml = new MyFDMSW2BandsXML();
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             dataGridView1.CellValidating += DataGridView1_CellValidating;
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
+            dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
+            dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
+            _appLocation = Directory.GetCurrentDirectory();
+
+        }
+
+        private void DataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            dataChanged = true;
+        }
+
+        private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            dataChanged = true;
         }
 
         public RadioAmBandTable SelectedRadioAmBandTable
@@ -91,12 +109,32 @@ namespace JobUpwork5
 
         private void AddEditForm_Load(object sender, EventArgs e)
         {
-            this.Text = "Setting";    
-            
+            this.Text = "Setting";
+            fdmsw2BandsXml = new Data(mainForm.FileName);
             this.BindModel();
         }
 
-        public IList<RadioAmBandTable> AllRadioAmBandTables; 
+        public IList<RadioAmBandTable> AllRadioAmBandTables;
+
+        private void BindGrid(IList<RadioAmBandTable> arbt)
+        {
+            if(!arbt.Any()) return;
+
+            this.Enabled.DataPropertyName = "Enabled";
+            this.Color.ReadOnly = true;
+            //this.Color.DataPropertyName = "Rgb";
+            this.Label.DataPropertyName = "Label";
+            this.Start.DataPropertyName = "StartFreq";
+            this.Stop.DataPropertyName = "StopFreq";
+            this.Mode.DataPropertyName = "Mode";
+            this.BW.DataPropertyName = "BW";
+            this.Tune.DataPropertyName = "Tune";
+            this.Note.DataPropertyName = "Note";
+
+            this.dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.DataSource = arbt;
+        }
+
         public void BindModel()
         {
             try
@@ -109,27 +147,22 @@ namespace JobUpwork5
                 this.textBoxIP.DataBindings.Add("Text", this.mainForm, "IPAddress");
                 this.textBoxPort.DataBindings.Clear();
                 this.textBoxPort.DataBindings.Add("Text", this.mainForm, "Port");
+                this.textBoxFileName.DataBindings.Clear();
+                this.textBoxFileName.DataBindings.Add("Text", this.mainForm, "FileName");
+
 
                 this.textBoxButtonSize.DataBindings.Clear();
                 this.textBoxButtonSize.DataBindings.Add("Text", this.mainForm, "ButtonSize");
                 this.textBoxButtonCount.DataBindings.Clear();
                 this.textBoxButtonCount.DataBindings.Add("Text", this.mainForm, "ButtonCount");
-
-                this.Enabled.DataPropertyName = "Enabled";
-                this.Color.ReadOnly = true;
-                //this.Color.DataPropertyName = "Rgb";
-                this.Label.DataPropertyName = "Label";
-                this.Start.DataPropertyName = "StartFreq";
-                this.Stop.DataPropertyName = "StopFreq";
-                this.Mode.DataPropertyName = "Mode";
-                this.BW.DataPropertyName = "BW";
-                this.Tune.DataPropertyName = "Tune";
-                this.Note.DataPropertyName = "Note";
-                this.Command.DataPropertyName = "Command";
-
+                
                 AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
-                this.dataGridView1.AutoGenerateColumns = false;
-                dataGridView1.DataSource = AllRadioAmBandTables;
+                BindGrid(AllRadioAmBandTables);
+
+
+                this.checkBoxKHZ.DataBindings.Clear();
+                this.checkBoxKHZ.DataBindings.Add("Checked", this.mainForm, "IsKHZ");
+
             }
             catch (Exception ex)
             {
@@ -153,15 +186,18 @@ namespace JobUpwork5
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
+           
             var model = new RadioAmBandTable();
             model.Rgb = System.Drawing.Color.Black;
-            AllRadioAmBandTables.Add(model);
             dataGridView1.EndEdit();
-
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = AllRadioAmBandTables;
-            
-            dataGridView1.CurrentCell = dataGridView1.Rows[AllRadioAmBandTables.Count - 1].Cells[this.Label.Index];
+            AllRadioAmBandTables.Add(model);
+
+            BindGrid(AllRadioAmBandTables);
+            var row = dataGridView1.Rows[AllRadioAmBandTables.Count - 1].Cells[this.Label.Index];
+            dataGridView1.ClearSelection();
+            dataGridView1.CurrentCell = row;
+            dataChanged = true;
             dataGridView1.BeginEdit(true);
 
         }
@@ -171,9 +207,124 @@ namespace JobUpwork5
             AllRadioAmBandTables.Remove(SelectedRadioAmBandTable);
             dataGridView1.EndEdit();
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = AllRadioAmBandTables;
-            if(AllRadioAmBandTables.Any())
-            dataGridView1.BeginEdit(true);
+            BindGrid(AllRadioAmBandTables);
+            dataChanged = true;
+            if (AllRadioAmBandTables.Any())
+                dataGridView1.BeginEdit(true);
+        }
+
+        private void buttonMoveUp_Click(object sender, EventArgs e)
+        {
+            var cell = dataGridView1.CurrentCell.ColumnIndex;
+
+            var ind = AllRadioAmBandTables.IndexOf(SelectedRadioAmBandTable);
+            if (ind == 0) return;
+            var old = AllRadioAmBandTables[ind - 1];
+            AllRadioAmBandTables[ind - 1] = AllRadioAmBandTables[ind];
+            AllRadioAmBandTables[ind] = old;
+ 
+            
+            dataGridView1.EndEdit();
+            dataGridView1.DataSource = null;
+            BindGrid(AllRadioAmBandTables);
+
+            var row = dataGridView1.Rows[ind - 1].Cells[cell];
+            dataGridView1.CurrentCell = row;
+            
+            if (AllRadioAmBandTables.Any() && dataGridView1.CurrentCell is DataGridViewTextBoxCell)
+                dataGridView1.BeginEdit(true);
+            dataChanged = true;
+        }
+
+        private void buttonMoveDown_Click(object sender, EventArgs e)
+        {
+            var cell = dataGridView1.CurrentCell.ColumnIndex;
+
+            var ind = AllRadioAmBandTables.IndexOf(SelectedRadioAmBandTable);
+            if (ind == AllRadioAmBandTables.Count - 1) return;
+            var old = AllRadioAmBandTables[ind + 1];
+            AllRadioAmBandTables[ind + 1] = AllRadioAmBandTables[ind];
+            AllRadioAmBandTables[ind] = old;
+
+
+            dataGridView1.EndEdit();
+            dataGridView1.DataSource = null;
+            BindGrid(AllRadioAmBandTables);
+
+            var row = dataGridView1.Rows[ind + 1].Cells[cell];
+            dataGridView1.CurrentCell = row;
+            
+            if (AllRadioAmBandTables.Any() && dataGridView1.CurrentCell is DataGridViewTextBoxCell)
+                dataGridView1.BeginEdit(true);
+            dataChanged = true;
+        }
+
+        private void checkBoxKHZ_CheckedChanged(object sender, EventArgs e)
+        {
+            if(AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
+            foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+            {
+                allRadioAmBandTable.IsKHZ = (sender as CheckBox).Checked;
+                dataGridView1.ClearSelection();
+                dataGridView1.Refresh();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+
+            var dic = Path.GetDirectoryName(mainForm.FileName);
+
+            if (string.IsNullOrEmpty(dic))
+            {
+
+                openFileDialog1.InitialDirectory = _appLocation;
+            }
+            else
+            {
+                openFileDialog1.InitialDirectory = dic;
+                
+            }
+
+            openFileDialog1.Filter = "XML Files (*.xml)|*.xml";
+            openFileDialog1.FileName = textBoxFileName.Text;
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.CheckPathExists = true;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (Path.GetDirectoryName(openFileDialog1.FileName).Equals(_appLocation))
+                {
+                    if (Path.GetFileName(openFileDialog1.FileName).Equals(textBoxFileName.Text)) return;
+                    mainForm.FileName = Path.GetFileName(openFileDialog1.FileName);
+                    textBoxFileName.Text = Path.GetFileName(openFileDialog1.FileName);
+                }
+                else
+                {
+                    if (openFileDialog1.FileName.Equals(textBoxFileName.Text)) return;
+                    textBoxFileName.Text = openFileDialog1.FileName;
+                    mainForm.FileName = openFileDialog1.FileName;
+                }
+
+                if (dataChanged)
+                {
+                    var save = MessageBox.Show("You have make some chnage in current XML fiel. Do you want to save it?",
+                        "Confirm Change File", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                    if (save == DialogResult.Yes)
+                    {
+                        fdmsw2BandsXml.UpdateRadioAmBandTable(AllRadioAmBandTables);
+                    }
+
+                    dataChanged = false;
+                }
+
+                fdmsw2BandsXml = new Data(mainForm.FileName);
+                dataGridView1.DataSource = null;
+                AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
+                BindGrid(AllRadioAmBandTables);
+
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace JobUpwork5
             this.ForeColor = System.Drawing.Color.White;
             this.MaximumSize = new System.Drawing.Size(50, 28);
             this.MinimumSize = new System.Drawing.Size(50, 28);
-            this.Size = new System.Drawing.Size(80, 28);
+            this.Size = new System.Drawing.Size(50, 28);
             this.ResumeLayout(false);
 
         }
@@ -51,11 +51,6 @@ namespace JobUpwork5
         {
             get { return radioAmBandTable.Label; }
             set { radioAmBandTable.Label = value; }
-        }
-        public string Command
-        {
-            get { return radioAmBandTable.Command; }
-            set { radioAmBandTable.Command = value; }
         }
 
         public bool Enabledd
@@ -82,6 +77,11 @@ namespace JobUpwork5
         {
             get { return radioAmBandTable.Note; }
             set { radioAmBandTable.Note = value; }
+        }
+        public string Command
+        {
+            get { return radioAmBandTable.Command; }
+            set { radioAmBandTable.Command = value; }
         }
         public Color RGB 
         {

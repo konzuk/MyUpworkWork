@@ -1,13 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <DocumentElement>
-  <FormSetting>
-    <IsFormTopMost>0</IsFormTopMost>
-    <IsFormFixed>0</IsFormFixed>
-    <IPAddress>127.0.0.1</IPAddress>
-    <Port>1893</Port>
-    <ButtonSize>70,28</ButtonSize>
-    <ButtonCount>6</ButtonCount>
-  </FormSetting>
   <RadioAmBandTable>
     <Label>CW 100Hz 3</Label>
     <Enabledd>0</Enabledd>
