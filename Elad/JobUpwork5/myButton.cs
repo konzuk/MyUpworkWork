@@ -60,23 +60,28 @@ namespace JobUpwork5
         }
         public double StartFreq
         {
-            get { return radioAmBandTable.StartFreq; }
-            set { radioAmBandTable.StartFreq = value; }
+            get { return radioAmBandTable.StartFreqSave; }
+            set { radioAmBandTable.StartFreqSave = value; }
         }
         public double StopFreq
         {
-            get { return radioAmBandTable.StopFreq; }
-            set { radioAmBandTable.StopFreq = value; }
+            get { return radioAmBandTable.StopFreqSave; }
+            set { radioAmBandTable.StopFreqSave = value; }
         }
         public double Tune
         {
-            get { return radioAmBandTable.Tune; }
-            set { radioAmBandTable.Tune = value; }
+            get { return radioAmBandTable.TuneSave; }
+            set { radioAmBandTable.TuneSave = value; }
         }
         public string Note
         {
             get { return radioAmBandTable.Note; }
             set { radioAmBandTable.Note = value; }
+        }
+        public string Command
+        {
+            get { return radioAmBandTable.Command; }
+            set { radioAmBandTable.Command = value; }
         }
         public Color RGB 
         {

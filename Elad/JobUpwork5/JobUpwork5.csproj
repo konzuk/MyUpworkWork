@@ -59,9 +59,6 @@
       <DependentUpon>AddEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
-    <Compile Include="myFlowPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="myButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -74,9 +71,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditForm.resx">
       <DependentUpon>AddEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="myFlowPanel.resx">
-      <DependentUpon>myFlowPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="myButton.resx">
       <DependentUpon>myButton.cs</DependentUpon>
@@ -103,7 +97,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\FDMSW2Bands.xml" />
     <Content Include="bin\Debug\Setting.xml" />
     <Content Include="fdm.ico" />
   </ItemGroup>

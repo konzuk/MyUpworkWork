@@ -16,8 +16,6 @@ namespace JobUpwork5
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new BS());
-
-
         }
     }
 }
