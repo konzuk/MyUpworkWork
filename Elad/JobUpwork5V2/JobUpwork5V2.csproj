@@ -52,18 +52,15 @@
     <Compile Include="AddEditForm.Designer.cs">
       <DependentUpon>AddEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BS.cs">
+    <Compile Include="MC.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BS.Designer.cs">
-      <DependentUpon>BS.cs</DependentUpon>
+    <Compile Include="MC.Designer.cs">
+      <DependentUpon>MC.cs</DependentUpon>
     </Compile>
     <Compile Include="Client.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="myButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="myFlowPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -73,14 +70,11 @@
     <EmbeddedResource Include="AddEditForm.resx">
       <DependentUpon>AddEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BS.resx">
-      <DependentUpon>BS.cs</DependentUpon>
+    <EmbeddedResource Include="MC.resx">
+      <DependentUpon>MC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="myButton.resx">
       <DependentUpon>myButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="myFlowPanel.resx">
-      <DependentUpon>myFlowPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -104,7 +98,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\FDMSW2Bands.xml" />
     <Content Include="bin\Debug\Setting.xml" />
     <Content Include="fdm.ico" />
   </ItemGroup>

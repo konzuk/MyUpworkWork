@@ -11,7 +11,7 @@ namespace JobUpwork5
         {
             _xDocument = XDocument.Load("Setting.xml");
         }
-        public void GetFormSetting(BS mainForm)
+        public void GetFormSetting(MC mainForm)
         {
             var test = _xDocument.Descendants("FormSetting").SingleOrDefault();
             if (test != null)
@@ -23,12 +23,11 @@ namespace JobUpwork5
                 mainForm.ButtonSize = test.Element("ButtonSize").Value;
                 mainForm.ButtonCount = Convert.ToInt32(test.Element("ButtonCount").Value);
                 mainForm.DesiredLocation = test.Element("DesiredLocation").Value;
-                mainForm.FileName = test.Element("FileName").Value;
                 mainForm.IsKHZ = test.Element("IsKHZ").Value == "1";
             }
         }
 
-        public void SaveFormSetting(BS mainForm)
+        public void SaveFormSetting(MC mainForm)
         {
             var test = _xDocument.Descendants("FormSetting").SingleOrDefault();
             if (test != null)
@@ -39,7 +38,6 @@ namespace JobUpwork5
                 test.Element("Port").Value = mainForm.Port;
                 test.Element("ButtonSize").Value = mainForm.ButtonSize;
                 test.Element("DesiredLocation").Value = mainForm.DesiredLocation;
-                test.Element("FileName").Value = mainForm.FileName;
                 test.Element("IsKHZ").Value = Convert.ToInt32(mainForm.IsKHZ).ToString();
                 test.Element("ButtonCount").Value = mainForm.ButtonCount.ToString();
 

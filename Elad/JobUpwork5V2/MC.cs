@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using ClientServerApp;
 
 namespace JobUpwork5
 {
-    public partial class BS : Form
+    
+    public partial class MC : Form
     {
         private Data Fdmsw2BandsXml;
         private Setting Setting;
@@ -17,18 +20,49 @@ namespace JobUpwork5
         public bool IsKHZ { get; set; }
         public string ButtonSize { get; set; }
         public int ButtonCount { get; set; }
-        public string FileName { get; set; }
-        public BS()
+        public string FileName { get; private set; }
+
+        public void SaveFileName(string fn)
+        {
+            FileName = fn;
+        }
+
+        public MC()
         {
             InitializeComponent();
             Setting = new Setting();
             this.GetSetting();
+
+            FileName = $"{MyDocument}\\ELAD\\ESW3#MACRO\\MACRO.xml";
+
+            if (!File.Exists(FileName))
+            {
+                var path = Path.GetDirectoryName(FileName);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var doc = new XDocument();
+                XElement rabt = new XElement("DocumentElement");
+                doc.Add(rabt);
+                doc.Save(FileName);
+            }
             Fdmsw2BandsXml = new Data(FileName);
             this.AddRABTButtons();
             this.Load += MainForm_Load;
             this.LocationChanged += MainForm_LocationChanged;
         }
-        
+
+
+        private string MyDocument
+        {
+            get
+            {
+                return  Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+            
+        }
+
         private void MyButtonSetting_Click(object sender, EventArgs e)
         {
             var edit = new AddEditForm();
@@ -73,7 +107,7 @@ namespace JobUpwork5
         {
             Setting.GetFormSetting(this);
 
-            this.Text = $"BAND-SW IP: {IPAddress}";
+            this.Text = $"MACRO IP: {IPAddress}";
 
         }
         public void SaveSetting()
@@ -87,7 +121,8 @@ namespace JobUpwork5
             
             this.flowLayoutPanel1.Controls.Clear();
             this.flowLayoutPanel2.Controls.Clear();
-            
+            this.flowLayoutPanel3.Controls.Clear();
+
             var size = Array.ConvertAll(ButtonSize.Split(','), Int32.Parse);
             
             var set = new myButton();
@@ -104,7 +139,13 @@ namespace JobUpwork5
             close.MaximumSize = new Size(size[0], size[1]);
             close.Click += buttonClose_Click;
             close.Text = "QUIT";
-            this.flowLayoutPanel2.Controls.Add(close);
+
+          
+
+            this.flowLayoutPanel3.Controls.Add(close);
+
+
+            panel1.Height = size[1] + 6 + 15;
 
             flowLayoutPanel2.MinimumSize = new Size((2 * (size[0] + 6)) + 10, 0);
             flowLayoutPanel2.MaximumSize = new Size((2 * (size[0] + 6)) + 10, 0);
@@ -180,6 +221,8 @@ namespace JobUpwork5
             }
 
         }
+
+
         public string IPAddress { get; set; }
         public string Port { get; set; }
 
@@ -194,6 +237,13 @@ namespace JobUpwork5
         {
             this.Close();
         }
+
+        private void BS_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
         //private void CloseButton_Click(object sender, EventArgs e)
         //{
         //    this.Close();

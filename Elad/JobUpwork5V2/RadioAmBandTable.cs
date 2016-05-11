@@ -5,11 +5,19 @@ namespace JobUpwork5
 {
     public class RadioAmBandTable
     {
-        
+
+        public RadioAmBandTable Clone()
+        {
+            return (RadioAmBandTable)this.MemberwiseClone();
+        }
+
         public string Label { get; set; }
         public string Mode { get; set; }
         public bool Enabled { get; set; }
 
+        public bool IsValid {
+            get { return StartFreqSave < StopFreqSave && TuneSave >= StartFreqSave && TuneSave <= StopFreqSave; }
+        }
 
         public string Command { get; set; }
         private double _startFreq;
@@ -31,22 +39,43 @@ namespace JobUpwork5
             }
         }
 
+        public double StartFreqSave
+        {
+            get { return  _startFreq; }
+            set { _startFreq = value; }
+        }
+        public double StopFreqSave
+        {
+            get { return _stopFreq; }
+            set { _stopFreq = value; }
+        }
+
+        public double TuneSave
+        {
+            get { return _tune; }
+            set { _tune = value; }
+        }
+
         public double StartFreq
         {
-            get { return IsKHZ? _startFreq/ Rate: _startFreq ; }
-            set { _startFreq = IsKHZ ?value *Rate :value; }
+            get { return IsKHZ ? _startFreq / Rate : _startFreq; }
+            set
+            {
+                _startFreq = IsKHZ ? Math.Round(value * Rate) : Math.Round(value) ; 
+                
+            }
         }
 
         public double Tune
         {
             get { return IsKHZ ? _tune / Rate : _tune; }
-            set { _tune = IsKHZ ? value * Rate : value; }
+            set { _tune = IsKHZ ? Math.Round(value * Rate)  : Math.Round(value); }
         }
 
         public double StopFreq
         {
             get { return IsKHZ ? _stopFreq / Rate : _stopFreq; }
-            set { _stopFreq = IsKHZ ? value * Rate : value; }
+            set { _stopFreq = IsKHZ ? Math.Round(value * Rate) : Math.Round(value); }
         }
     }
 }

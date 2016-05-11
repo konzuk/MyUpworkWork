@@ -5,7 +5,7 @@
     <IsFormFixed>0</IsFormFixed>
     <IPAddress>127.0.0.1</IPAddress>
     <Port>1893</Port>
-    <ButtonSize>50,28</ButtonSize>
+    <ButtonSize>100,28</ButtonSize>
     <ButtonCount>4</ButtonCount>
     <DesiredLocation>208,77</DesiredLocation>
     <FileName>FDMSW2Bands.xml</FileName>

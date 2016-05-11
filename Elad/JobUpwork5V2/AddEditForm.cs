@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace JobUpwork5
 {
     public partial class AddEditForm : Form
     {
         private Data fdmsw2BandsXml { get; set; }
-        public BS mainForm { get; set; }
-        private string _appLocation;
+        public MC mainForm { get; set; }
 
         private bool dataChanged;
 
@@ -28,7 +30,7 @@ namespace JobUpwork5
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
             dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
-            _appLocation = Directory.GetCurrentDirectory();
+
 
         }
 
@@ -50,11 +52,11 @@ namespace JobUpwork5
                 {
                     if (this.dataGridView1.SelectedCells.Count > 0)
                     {
-                        return this.dataGridView1.SelectedCells[0].OwningRow.DataBoundItem  as RadioAmBandTable;
+                        return this.dataGridView1.SelectedCells[0].OwningRow.DataBoundItem as RadioAmBandTable;
                     }
                     return null;
                 }
-                catch 
+                catch
                 {
                     return null;
                 }
@@ -97,18 +99,72 @@ namespace JobUpwork5
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (this.dataGridView1.Columns[e.ColumnIndex] == this.Color)
+            try
             {
-                if (AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
+                if (this.dataGridView1.Columns[e.ColumnIndex] == this.Color)
                 {
-                    var model = AllRadioAmBandTables[e.RowIndex];
-                    e.CellStyle.BackColor = model.Rgb;
+                    if (AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
+                    {
+                        var model = AllRadioAmBandTables[e.RowIndex];
+                        e.CellStyle.BackColor = model.Rgb;
+                    }
+                }
+                if (this.dataGridView1.Columns[e.ColumnIndex] == this.Tune || this.dataGridView1.Columns[e.ColumnIndex] == this.Start || this.dataGridView1.Columns[e.ColumnIndex] == this.Stop)
+                {
+
+                    //double value = e.Value as double? ?? 0;
+                    //e.Value = /*model.IsKHZ ?*/ $"{value:#,##0.000}" /*: $"{value:#,##0}"*/;
+
+                    if (AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
+                    {
+                        var model = AllRadioAmBandTables[e.RowIndex];
+
+
+
+                        if (model.IsValid)
+                        {
+                            e.CellStyle.ForeColor = System.Drawing.Color.Black;
+                        }
+                        else
+                        {
+                            e.CellStyle.ForeColor = System.Drawing.Color.Red;
+                        }
+                    }
+
+
                 }
             }
-        }
+            catch
+            {
 
+
+            }
+
+
+
+        }
+        public string CurrentVersion
+        {
+            get
+            {
+                return ApplicationDeployment.IsNetworkDeployed
+                       ? ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString()
+                       : Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
         private void AddEditForm_Load(object sender, EventArgs e)
         {
+            this.labelVersion.Text = $"Version: {CurrentVersion}";
+            this.Start.HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopRight;
+            this.BW.HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopRight;
+            this.Stop.HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopRight;
+            this.Tune.HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopRight;
+
+            this.Start.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopRight;
+            this.BW.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopRight;
+            this.Stop.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopRight;
+            this.Tune.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopRight;
+
             this.Text = "Setting";
             fdmsw2BandsXml = new Data(mainForm.FileName);
             this.BindModel();
@@ -118,7 +174,7 @@ namespace JobUpwork5
 
         private void BindGrid(IList<RadioAmBandTable> arbt)
         {
-            if(!arbt.Any()) return;
+            if (!arbt.Any()) return;
 
             this.Enabled.DataPropertyName = "Enabled";
             this.Color.ReadOnly = true;
@@ -130,6 +186,7 @@ namespace JobUpwork5
             this.BW.DataPropertyName = "BW";
             this.Tune.DataPropertyName = "Tune";
             this.Note.DataPropertyName = "Note";
+            this.Command.DataPropertyName = "Command";
 
             this.dataGridView1.AutoGenerateColumns = false;
             dataGridView1.DataSource = arbt;
@@ -155,7 +212,7 @@ namespace JobUpwork5
                 this.textBoxButtonSize.DataBindings.Add("Text", this.mainForm, "ButtonSize");
                 this.textBoxButtonCount.DataBindings.Clear();
                 this.textBoxButtonCount.DataBindings.Add("Text", this.mainForm, "ButtonCount");
-                
+
                 AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
                 BindGrid(AllRadioAmBandTables);
 
@@ -171,11 +228,17 @@ namespace JobUpwork5
         }
 
         public bool isSave = false;
-        
+
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            isSave = true;
-            this.Close();
+            dataGridView1.Refresh();
+            if (AllRadioAmBandTables.All(s => s.IsValid) || MessageBox.Show("The start frequency, start frequency and tune is not valid. \nDo you want to save anyway?", "Invalid Save", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                isSave = true;
+                this.mainForm.SaveFileName(this.textBoxFileName.Text);
+                this.Close();
+            }
+
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -186,9 +249,18 @@ namespace JobUpwork5
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-           
-            var model = new RadioAmBandTable();
-            model.Rgb = System.Drawing.Color.Black;
+            RadioAmBandTable model = null;
+            if (SelectedRadioAmBandTable != null)
+            {
+                model = SelectedRadioAmBandTable.Clone();
+            }
+            else
+            {
+                model = new RadioAmBandTable();
+                model.Rgb = System.Drawing.Color.Black;
+                model.IsKHZ = this.checkBoxKHZ.Checked;
+            }
+
             dataGridView1.EndEdit();
             dataGridView1.DataSource = null;
             AllRadioAmBandTables.Add(model);
@@ -222,15 +294,15 @@ namespace JobUpwork5
             var old = AllRadioAmBandTables[ind - 1];
             AllRadioAmBandTables[ind - 1] = AllRadioAmBandTables[ind];
             AllRadioAmBandTables[ind] = old;
- 
-            
+
+
             dataGridView1.EndEdit();
             dataGridView1.DataSource = null;
             BindGrid(AllRadioAmBandTables);
 
             var row = dataGridView1.Rows[ind - 1].Cells[cell];
             dataGridView1.CurrentCell = row;
-            
+
             if (AllRadioAmBandTables.Any() && dataGridView1.CurrentCell is DataGridViewTextBoxCell)
                 dataGridView1.BeginEdit(true);
             dataChanged = true;
@@ -253,7 +325,7 @@ namespace JobUpwork5
 
             var row = dataGridView1.Rows[ind + 1].Cells[cell];
             dataGridView1.CurrentCell = row;
-            
+
             if (AllRadioAmBandTables.Any() && dataGridView1.CurrentCell is DataGridViewTextBoxCell)
                 dataGridView1.BeginEdit(true);
             dataChanged = true;
@@ -261,31 +333,29 @@ namespace JobUpwork5
 
         private void checkBoxKHZ_CheckedChanged(object sender, EventArgs e)
         {
-            if(AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
-            foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+            if (AllRadioAmBandTables != null && AllRadioAmBandTables.Any())
             {
-                allRadioAmBandTable.IsKHZ = (sender as CheckBox).Checked;
+                var check = (sender as CheckBox).Checked;
+                foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+                {
+                    allRadioAmBandTable.IsKHZ = check;
+                }
                 dataGridView1.ClearSelection();
                 dataGridView1.Refresh();
             }
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
 
-            var dic = Path.GetDirectoryName(mainForm.FileName);
+            var dic = Path.GetDirectoryName(textBoxFileName.Text);
 
-            if (string.IsNullOrEmpty(dic))
-            {
 
-                openFileDialog1.InitialDirectory = _appLocation;
-            }
-            else
-            {
-                openFileDialog1.InitialDirectory = dic;
-                
-            }
+            openFileDialog1.InitialDirectory = dic;
+
 
             openFileDialog1.Filter = "XML Files (*.xml)|*.xml";
             openFileDialog1.FileName = textBoxFileName.Text;
@@ -293,18 +363,11 @@ namespace JobUpwork5
             openFileDialog1.CheckPathExists = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (Path.GetDirectoryName(openFileDialog1.FileName).Equals(_appLocation))
-                {
-                    if (Path.GetFileName(openFileDialog1.FileName).Equals(textBoxFileName.Text)) return;
-                    mainForm.FileName = Path.GetFileName(openFileDialog1.FileName);
-                    textBoxFileName.Text = Path.GetFileName(openFileDialog1.FileName);
-                }
-                else
-                {
-                    if (openFileDialog1.FileName.Equals(textBoxFileName.Text)) return;
-                    textBoxFileName.Text = openFileDialog1.FileName;
-                    mainForm.FileName = openFileDialog1.FileName;
-                }
+
+                if (openFileDialog1.FileName.Equals(textBoxFileName.Text)) return;
+                textBoxFileName.Text = openFileDialog1.FileName;
+                //mainForm.FileName = openFileDialog1.FileName;
+
 
                 if (dataChanged)
                 {
@@ -319,11 +382,59 @@ namespace JobUpwork5
                     dataChanged = false;
                 }
 
-                fdmsw2BandsXml = new Data(mainForm.FileName);
+                fdmsw2BandsXml = new Data(textBoxFileName.Text);
                 dataGridView1.DataSource = null;
                 AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
+                foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+                {
+                    allRadioAmBandTable.IsKHZ = checkBoxKHZ.Checked;
+                    dataGridView1.ClearSelection();
+                    dataGridView1.Refresh();
+                }
+
                 BindGrid(AllRadioAmBandTables);
 
+            }
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            var dic = Path.GetDirectoryName(textBoxFileName.Text);
+
+
+            saveFileDialog1.InitialDirectory = dic;
+
+
+            saveFileDialog1.Filter = "XML Files (*.xml)|*.xml";
+            saveFileDialog1.FileName = "";
+            saveFileDialog1.CheckPathExists = true;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+
+                if (saveFileDialog1.FileName.Equals(textBoxFileName.Text)) return;
+                textBoxFileName.Text = saveFileDialog1.FileName;
+
+                var doc = new XDocument();
+                XElement rabt = new XElement("DocumentElement");
+                doc.Add(rabt);
+                doc.Save(textBoxFileName.Text);
+
+                fdmsw2BandsXml = new Data(textBoxFileName.Text);
+
+                fdmsw2BandsXml.UpdateRadioAmBandTable(AllRadioAmBandTables);
+                
+                dataGridView1.DataSource = null;
+                AllRadioAmBandTables = fdmsw2BandsXml.GetAllRadioAmBandTables();
+                foreach (var allRadioAmBandTable in AllRadioAmBandTables)
+                {
+                    allRadioAmBandTable.IsKHZ = checkBoxKHZ.Checked;
+                    dataGridView1.ClearSelection();
+                    dataGridView1.Refresh();
+                }
+
+                BindGrid(AllRadioAmBandTables);
+
+                dataChanged = false;
             }
         }
     }
