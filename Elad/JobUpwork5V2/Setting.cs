@@ -7,9 +7,11 @@ namespace JobUpwork5
     public class Setting
     {
         private XDocument _xDocument;
-        public Setting()
+        private string fileName = "";
+        public Setting(string setting)
         {
-            _xDocument = XDocument.Load("Setting.xml");
+            fileName = setting;
+            _xDocument = XDocument.Load(fileName);
         }
         public void GetFormSetting(MC mainForm)
         {
@@ -41,7 +43,7 @@ namespace JobUpwork5
                 test.Element("IsKHZ").Value = Convert.ToInt32(mainForm.IsKHZ).ToString();
                 test.Element("ButtonCount").Value = mainForm.ButtonCount.ToString();
 
-                _xDocument.Save("Setting.xml");
+                _xDocument.Save(fileName);
             }
         }
     }

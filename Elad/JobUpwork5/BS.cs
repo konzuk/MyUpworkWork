@@ -30,9 +30,7 @@ namespace JobUpwork5
         public BS()
         {
             InitializeComponent();
-            Setting = new Setting();
-            this.GetSetting();
-
+            var settingFile = $"{MyDocument}\\ELAD\\ESW3#Band\\Setting.xml";
             FileName = $"{MyDocument}\\ELAD\\ESW3#Band\\Band.xml";
 
             if (!File.Exists(FileName))
@@ -47,12 +45,45 @@ namespace JobUpwork5
                 doc.Add(rabt);
                 doc.Save(FileName);
             }
+
+            if (!File.Exists(settingFile))
+            {
+                var path2 = Path.GetDirectoryName(settingFile);
+                if (!Directory.Exists(path2))
+                {
+                    Directory.CreateDirectory(path2);
+                }
+                InitSetting(settingFile);
+            }
+            Setting = new Setting(settingFile);
+            
+            this.GetSetting();
+
+
+            
             Fdmsw2BandsXml = new Data(FileName);
             this.AddRABTButtons();
             this.Load += MainForm_Load;
             this.LocationChanged += MainForm_LocationChanged;
         }
 
+        private void InitSetting(string fileName)
+        {
+            var doc = new XDocument();
+            XElement rabt = 
+                new XElement("DocumentElement",
+                    new XElement("FormSetting",
+                        new XElement("IsFormTopMost", 0),
+                        new XElement("IsFormFixed", 0),
+                        new XElement("IPAddress", "127.0.0.1"),
+                        new XElement("Port", "1893"),
+                        new XElement("ButtonSize", "50,28"),
+                        new XElement("DesiredLocation", "200,200"),
+                        new XElement("IsKHZ", 0),
+                        new XElement("ButtonCount", 4)));
+            doc.Add(rabt);
+            doc.Save(fileName);
+        }
 
         private string MyDocument
         {

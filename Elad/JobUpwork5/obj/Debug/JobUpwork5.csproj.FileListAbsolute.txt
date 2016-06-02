@@ -30,3 +30,4 @@ D:\MyUpworkWork\trunk\Elad\JobUpwork5\obj\Debug\JobUpwork5.Properties.Resources.
 D:\MyUpworkWork\trunk\Elad\JobUpwork5\obj\Debug\JobUpwork5.csproj.GenerateResource.Cache
 D:\MyUpworkWork\trunk\Elad\JobUpwork5\obj\Debug\ESW3#Bandsw.exe
 D:\MyUpworkWork\trunk\Elad\JobUpwork5\obj\Debug\ESW3#Bandsw.pdb
+D:\MyUpworkWork\trunk\Elad\JobUpwork5\obj\Debug\JobUpwork5.csprojResolveAssemblyReference.cache

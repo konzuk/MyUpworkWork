@@ -8,3 +8,4 @@ D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\bin\Debug\ESW3#Macro.pdb
 D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.exe
 D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\ESW3#Macro.pdb
 D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\JobUpwork5.MC.resources
+D:\MyUpworkWork\trunk\Elad\JobUpwork5V2\obj\Debug\JobUpwork5V2.csprojResolveAssemblyReference.cache

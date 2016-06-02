@@ -1,0 +1,11 @@
+D:\MyUpworkWork\trunk\Elad\ASA62\bin\Debug\ASA62.exe.config
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.csprojResolveAssemblyReference.cache
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.SettingForm.resources
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.Properties.Resources.resources
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.csproj.GenerateResource.Cache
+D:\MyUpworkWork\trunk\Elad\ASA62\bin\Debug\ASA62.exe
+D:\MyUpworkWork\trunk\Elad\ASA62\bin\Debug\ASA62.pdb
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.exe
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.pdb
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.ASA62.resources
+D:\MyUpworkWork\trunk\Elad\ASA62\obj\Debug\ASA62.myButton.resources
